@@ -12,6 +12,7 @@ class BlackBoxClassifier:
         'Random Forest': RandomForestClassifier,
         'SVM': SVC}
 
+
     def get_classifier(self, **kwargs):
         if self.name not in self.CLASSIFIER_MAPPING:
             raise ValueError(
@@ -19,7 +20,11 @@ class BlackBoxClassifier:
         return self.CLASSIFIER_MAPPING[self.name](**kwargs)
 
     def train_model(self, X_train, y_train, **kwargs):
-        classifier = self.get_classifier(self.classifier_name, **kwargs)
-        classifier.fit(X_train, y_train)
-        return classifier
+        self.classifier = self.get_classifier(self.classifier_name, **kwargs)
+        self.classifier.fit(X_train, y_train)
+        return self.classifier
+
+    def apply_model(self, X_test):
+        predictions = self.classifier.predict(X_test)
+        return predictions
 
