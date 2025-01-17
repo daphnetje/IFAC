@@ -1,0 +1,201 @@
+,age,marital status,education,workinghours,workclass,occupation,race,sex,income
+0,40-49,Never married,"Started College, No Diploma",20-39,private,Office/Administrative Support,White alone,Female,low
+1,25-29,Never married,"Started High School, No Diploma",40-49,private,Construction/Extraction,White alone,Male,low
+2,60-69,Married,High School or GED Diploma,40-49,private,Production/Assembly,White alone,Male,low
+3,30-39,Married,Master or other Degree Beyond Bachelor,40-49,private,"Science, Engineering, Technology",White alone,Male,high
+4,25-29,Never married,"Started High School, No Diploma",40-49,private,Office/Administrative Support,White alone,Female,low
+5,50-59,Married,High School or GED Diploma,40-49,private,Construction/Extraction,White alone,Male,low
+6,50-59,Married,Associate Degree,40-49,private,Healthcare/Medical Services,White alone,Female,high
+7,40-49,Separated,Bachelor Degree,20-39,private,Education,Black or African American alone,Female,low
+8,40-49,Married,Bachelor Degree,40-49,governmental,Management/Business,White alone,Male,high
+9,50-59,Married,Middle School,40-49,private,Production/Assembly,White alone,Male,low
+10,60-69,Married,"Started College, No Diploma",20-39,private,Transport,White alone,Male,low
+11,50-59,Married,High School or GED Diploma,40-49,private,Office/Administrative Support,White alone,Female,low
+12,50-59,Separated,High School or GED Diploma,40-49,private,Production/Assembly,Black or African American alone,Female,low
+13,30-39,Married,Doctorate Degree,40-49,self employed,Healthcare/Medical Services,White alone,Female,high
+14,60-69,Married,No Elementary School,40-49,private,"Science, Engineering, Technology",Black or African American alone,Female,low
+15,50-59,Married,"Started College, No Diploma",40-49,private,Transport,White alone,Female,low
+16,40-49,Never married,"Started College, No Diploma",40-49,private,Sales,Black or African American alone,Male,low
+17,60-69,Separated,"Started College, No Diploma",20-39,private,Healthcare/Medical Services,White alone,Male,low
+18,40-49,Never married,Associate Degree,40-49,governmental,Healthcare/Medical Services,Black or African American alone,Female,low
+19,60-69,Married,Bachelor Degree,40-49,private,Sales,White alone,Male,high
+20,25-29,Married,Associate Degree,20-39,private,Service/Hospitality,White alone,Female,low
+21,50-59,Married,"Started College, No Diploma",40-49,governmental,Office/Administrative Support,White alone,Female,high
+22,30-39,Married,"Started College, No Diploma",More than 50,private,Service/Hospitality,White alone,Male,low
+23,60-69,Married,Bachelor Degree,40-49,governmental,Office/Administrative Support,Other,Male,high
+24,40-49,Married,"Started College, No Diploma",40-49,private,"Science, Engineering, Technology",White alone,Male,high
+25,Younger than 25,Never married,"Started College, No Diploma",Less than 20,private,Entertainment,White alone,Female,low
+26,50-59,Never married,High School or GED Diploma,40-49,private,Transport,Black or African American alone,Male,high
+27,40-49,Married,"Started College, No Diploma",40-49,governmental,Protective Services,White alone,Male,high
+28,40-49,Never married,High School or GED Diploma,20-39,private,Transport,Black or African American alone,Male,low
+29,25-29,Separated,High School or GED Diploma,40-49,private,Production/Assembly,White alone,Female,low
+30,60-69,Married,Bachelor Degree,20-39,governmental,Transport,White alone,Male,low
+31,30-39,Married,"Started College, No Diploma",40-49,private,Legal Services,White alone,Female,low
+32,25-29,Never married,Bachelor Degree,20-39,private,Management/Business,White alone,Male,low
+33,Younger than 25,Never married,Associate Degree,20-39,private,Sales,Black or African American alone,Female,low
+34,Younger than 25,Never married,"Started College, No Diploma",40-49,governmental,Military Services,White alone,Male,low
+35,Younger than 25,Never married,"Started College, No Diploma",Less than 20,private,Sales,White alone,Female,low
+36,60-69,Married,"Started College, No Diploma",40-49,governmental,Office/Administrative Support,White alone,Female,high
+37,30-39,Married,Master or other Degree Beyond Bachelor,40-49,governmental,Legal Services,White alone,Female,low
+38,50-59,Married,"Started College, No Diploma",40-49,private,Management/Business,White alone,Female,low
+39,Older than 70,Married,High School or GED Diploma,Less than 20,self employed,Sales,White alone,Male,low
+40,40-49,Married,"Started College, No Diploma",40-49,governmental,Construction/Extraction,White alone,Male,low
+41,25-29,Never married,High School or GED Diploma,40-49,private,Production/Assembly,Black or African American alone,Male,low
+42,50-59,Married,High School or GED Diploma,More than 50,private,Repair/Maintenance,White alone,Male,high
+43,25-29,Married,"Started College, No Diploma",More than 50,private,Finance/Accounting,White alone,Female,low
+44,40-49,Married,"Started College, No Diploma",40-49,private,Management/Business,White alone,Male,high
+45,50-59,Married,Associate Degree,Less than 20,self employed,Healthcare/Medical Services,White alone,Female,low
+46,Younger than 25,Never married,"Started College, No Diploma",20-39,private,Office/Administrative Support,Other,Female,low
+47,40-49,Married,High School or GED Diploma,40-49,private,Production/Assembly,Black or African American alone,Female,low
+48,40-49,Married,High School or GED Diploma,20-39,private,Sales,White alone,Female,low
+49,60-69,Married,Associate Degree,40-49,private,Healthcare/Medical Services,White alone,Female,high
+50,50-59,Separated,High School or GED Diploma,20-39,private,Transport,White alone,Female,low
+51,30-39,Never married,Associate Degree,40-49,private,Office/Administrative Support,White alone,Male,low
+52,30-39,Married,Master or other Degree Beyond Bachelor,40-49,private,Education,White alone,Male,high
+53,40-49,Married,"Started College, No Diploma",40-49,private,Service/Hospitality,Black or African American alone,Male,low
+54,60-69,Married,"Started College, No Diploma",20-39,private,Healthcare/Medical Services,White alone,Female,low
+55,50-59,Separated,Associate Degree,40-49,private,Healthcare/Medical Services,White alone,Female,low
+56,50-59,Separated,High School or GED Diploma,20-39,private,Production/Assembly,Black or African American alone,Female,low
+57,25-29,Never married,Master or other Degree Beyond Bachelor,More than 50,private,Transport,White alone,Male,low
+58,40-49,Married,Associate Degree,40-49,private,Repair/Maintenance,Black or African American alone,Female,high
+59,Younger than 25,Never married,High School or GED Diploma,Less than 20,private,Education,White alone,Female,low
+60,50-59,Married,Bachelor Degree,40-49,private,Finance/Accounting,White alone,Female,low
+61,50-59,Married,High School or GED Diploma,More than 50,private,Repair/Maintenance,White alone,Male,high
+62,50-59,Married,Associate Degree,20-39,private,Healthcare/Medical Services,White alone,Female,high
+63,50-59,Married,"Started College, No Diploma",40-49,private,Healthcare/Medical Services,White alone,Female,low
+64,50-59,Married,Associate Degree,More than 50,private,Service/Hospitality,White alone,Female,low
+65,40-49,Separated,"Started College, No Diploma",40-49,private,Production/Assembly,White alone,Male,low
+66,50-59,Married,High School or GED Diploma,20-39,private,Sales,White alone,Female,low
+67,30-39,Married,"Started College, No Diploma",40-49,private,Production/Assembly,White alone,Male,high
+68,25-29,Never married,Bachelor Degree,40-49,private,Service/Hospitality,White alone,Female,low
+69,50-59,Married,Master or other Degree Beyond Bachelor,More than 50,governmental,Education,White alone,Female,high
+70,50-59,Married,High School or GED Diploma,More than 50,private,Production/Assembly,Black or African American alone,Male,low
+71,30-39,Never married,"Started College, No Diploma",40-49,private,Sales,Black or African American alone,Female,low
+72,30-39,Separated,Doctorate Degree,More than 50,private,Education,White alone,Female,low
+73,30-39,Separated,Associate Degree,40-49,private,Production/Assembly,White alone,Female,low
+74,60-69,Married,"Started College, No Diploma",40-49,private,Healthcare/Medical Services,Black or African American alone,Female,low
+75,30-39,Separated,High School or GED Diploma,40-49,private,Healthcare/Medical Services,Black or African American alone,Female,low
+76,50-59,Married,High School or GED Diploma,Less than 20,private,Sales,White alone,Female,low
+77,25-29,Married,High School or GED Diploma,40-49,governmental,Protective Services,White alone,Male,low
+78,25-29,Never married,Bachelor Degree,20-39,private,Education,White alone,Female,low
+79,40-49,Married,Associate Degree,More than 50,private,Sales,White alone,Male,high
+80,60-69,Separated,Bachelor Degree,40-49,private,Healthcare/Medical Services,Black or African American alone,Female,low
+81,40-49,Never married,Master or other Degree Beyond Bachelor,40-49,private,"Science, Engineering, Technology",Black or African American alone,Female,low
+82,40-49,Married,Master or other Degree Beyond Bachelor,More than 50,private,Finance/Accounting,White alone,Female,high
+83,Younger than 25,Never married,"Started College, No Diploma",20-39,private,Education,White alone,Female,low
+84,50-59,Married,Doctorate Degree,40-49,self employed,Healthcare/Medical Services,Other,Male,high
+85,30-39,Married,Master or other Degree Beyond Bachelor,40-49,private,"Science, Engineering, Technology",White alone,Male,high
+86,40-49,Married,Middle School,40-49,private,Repair/Maintenance,White alone,Male,low
+87,30-39,Married,Associate Degree,More than 50,private,Repair/Maintenance,White alone,Male,high
+88,60-69,Married,"Started College, No Diploma",40-49,private,Office/Administrative Support,White alone,Female,low
+89,25-29,Married,Master or other Degree Beyond Bachelor,20-39,self employed,Healthcare/Medical Services,White alone,Female,low
+90,Younger than 25,Never married,High School or GED Diploma,40-49,private,Transport,White alone,Female,low
+91,50-59,Married,High School or GED Diploma,40-49,private,Transport,White alone,Female,low
+92,40-49,Married,High School or GED Diploma,More than 50,governmental,Protective Services,White alone,Male,high
+93,60-69,Married,Middle School,Less than 20,self employed,Service/Hospitality,White alone,Female,low
+94,60-69,Married,Associate Degree,More than 50,private,Education,White alone,Female,low
+95,Younger than 25,Never married,Bachelor Degree,20-39,private,Sales,White alone,Female,low
+96,Older than 70,Married,"Started College, No Diploma",20-39,private,Entertainment,White alone,Female,low
+97,30-39,Married,"Started College, No Diploma",More than 50,private,"Science, Engineering, Technology",White alone,Male,high
+98,60-69,Married,Bachelor Degree,40-49,private,Service/Hospitality,White alone,Male,high
+99,Younger than 25,Married,High School or GED Diploma,40-49,private,Construction/Extraction,White alone,Male,low
+100,60-69,Married,"Started High School, No Diploma",More than 50,private,Construction/Extraction,White alone,Male,low
+101,30-39,Married,High School or GED Diploma,40-49,private,Service/Hospitality,White alone,Female,low
+102,40-49,Married,Bachelor Degree,40-49,private,Finance/Accounting,White alone,Male,high
+103,30-39,Married,Master or other Degree Beyond Bachelor,More than 50,private,Education,White alone,Female,low
+104,Younger than 25,Married,Bachelor Degree,40-49,private,Management/Business,White alone,Male,low
+105,50-59,Married,"Started College, No Diploma",Less than 20,self employed,Sales,White alone,Male,low
+106,30-39,Married,High School or GED Diploma,20-39,private,Construction/Extraction,Black or African American alone,Male,low
+107,60-69,Married,Associate Degree,Less than 20,self employed,Legal Services,White alone,Female,low
+108,50-59,Married,Master or other Degree Beyond Bachelor,More than 50,self employed,Management/Business,White alone,Male,high
+109,60-69,Married,High School or GED Diploma,40-49,private,Sales,White alone,Male,high
+110,40-49,Separated,Master or other Degree Beyond Bachelor,40-49,private,Production/Assembly,Other,Male,high
+111,Younger than 25,Never married,High School or GED Diploma,40-49,private,Construction/Extraction,White alone,Male,low
+112,Younger than 25,Married,Associate Degree,40-49,private,Production/Assembly,White alone,Male,low
+113,50-59,Married,Master or other Degree Beyond Bachelor,More than 50,governmental,Management/Business,White alone,Male,high
+114,50-59,Separated,High School or GED Diploma,More than 50,private,Transport,Black or African American alone,Male,low
+115,30-39,Married,"Started College, No Diploma",More than 50,private,"Science, Engineering, Technology",White alone,Male,high
+116,Younger than 25,Never married,"Started College, No Diploma",20-39,self employed,Sales,Black or African American alone,Male,low
+117,25-29,Never married,High School or GED Diploma,40-49,private,Service/Hospitality,Black or African American alone,Female,low
+118,Younger than 25,Never married,"Started College, No Diploma",20-39,private,Transport,White alone,Male,low
+119,50-59,Married,Bachelor Degree,40-49,private,Entertainment,White alone,Female,low
+120,50-59,Married,Bachelor Degree,40-49,private,Management/Business,White alone,Male,high
+121,40-49,Never married,"Started College, No Diploma",More than 50,private,Office/Administrative Support,White alone,Female,low
+122,30-39,Married,Associate Degree,40-49,governmental,Office/Administrative Support,White alone,Female,low
+123,Younger than 25,Married,Associate Degree,20-39,governmental,Sales,Black or African American alone,Female,low
+124,Younger than 25,Never married,"Started College, No Diploma",Less than 20,private,Office/Administrative Support,Other,Male,low
+125,60-69,Married,"Started College, No Diploma",40-49,private,Sales,White alone,Female,high
+126,40-49,Never married,"Started College, No Diploma",40-49,private,Sales,White alone,Male,low
+127,30-39,Separated,"Started College, No Diploma",20-39,private,Transport,White alone,Female,low
+128,60-69,Married,Bachelor Degree,40-49,private,Transport,White alone,Male,high
+129,25-29,Never married,High School or GED Diploma,40-49,private,Production/Assembly,Black or African American alone,Male,low
+130,Older than 70,Married,High School or GED Diploma,20-39,self employed,Office/Administrative Support,White alone,Female,low
+131,60-69,Married,High School or GED Diploma,More than 50,private,"Science, Engineering, Technology",White alone,Male,high
+132,Younger than 25,Never married,"Started College, No Diploma",Less than 20,private,Sales,Other,Female,low
+133,40-49,Married,Bachelor Degree,More than 50,private,Management/Business,White alone,Female,high
+134,50-59,Never married,High School or GED Diploma,40-49,private,Repair/Maintenance,White alone,Male,low
+135,60-69,Married,Associate Degree,20-39,private,Office/Administrative Support,White alone,Female,low
+136,50-59,Married,Master or other Degree Beyond Bachelor,Less than 20,self employed,Entertainment,White alone,Female,low
+137,50-59,Married,High School or GED Diploma,40-49,governmental,Construction/Extraction,Black or African American alone,Male,low
+138,60-69,Married,Master or other Degree Beyond Bachelor,More than 50,private,Healthcare/Medical Services,White alone,Female,high
+139,30-39,Never married,"Started College, No Diploma",40-49,private,Sales,Black or African American alone,Female,low
+140,40-49,Married,Master or other Degree Beyond Bachelor,Less than 20,private,Education,White alone,Female,low
+141,60-69,Widowed,High School or GED Diploma,20-39,self employed,Service/Hospitality,White alone,Female,low
+142,Older than 70,Married,Master or other Degree Beyond Bachelor,40-49,self employed,Sales,White alone,Female,high
+143,50-59,Widowed,"Started College, No Diploma",40-49,private,Office/Administrative Support,White alone,Female,low
+144,40-49,Married,High School or GED Diploma,40-49,private,Office/Administrative Support,Black or African American alone,Female,low
+145,25-29,Married,Master or other Degree Beyond Bachelor,40-49,private,Education,White alone,Female,low
+146,30-39,Married,Doctorate Degree,40-49,governmental,Management/Business,White alone,Male,high
+147,30-39,Married,Master or other Degree Beyond Bachelor,Less than 20,private,Healthcare/Medical Services,White alone,Female,high
+148,60-69,Married,High School or GED Diploma,20-39,governmental,Transport,Black or African American alone,Female,low
+149,50-59,Never married,"Started College, No Diploma",40-49,governmental,Office/Administrative Support,Black or African American alone,Female,low
+150,50-59,Widowed,Master or other Degree Beyond Bachelor,More than 50,self employed,Legal Services,White alone,Male,high
+151,Younger than 25,Never married,"Started High School, No Diploma",20-39,private,Sales,Black or African American alone,Female,low
+152,60-69,Married,Bachelor Degree,40-49,private,"Science, Engineering, Technology",White alone,Male,high
+153,30-39,Never married,"Started High School, No Diploma",More than 50,private,Transport,Black or African American alone,Male,low
+154,50-59,Married,Master or other Degree Beyond Bachelor,40-49,governmental,Office/Administrative Support,Black or African American alone,Male,high
+155,30-39,Married,Bachelor Degree,40-49,governmental,"Science, Engineering, Technology",White alone,Male,high
+156,30-39,Married,"Started College, No Diploma",More than 50,private,Protective Services,White alone,Male,high
+157,Younger than 25,Never married,High School or GED Diploma,20-39,private,Service/Hospitality,White alone,Male,low
+158,50-59,Separated,"Started College, No Diploma",40-49,private,Office/Administrative Support,White alone,Female,low
+159,40-49,Married,"Started College, No Diploma",40-49,governmental,Office/Administrative Support,Black or African American alone,Female,low
+160,30-39,Married,High School or GED Diploma,40-49,private,Construction/Extraction,White alone,Male,low
+161,50-59,Married,"Started College, No Diploma",More than 50,private,Transport,White alone,Male,low
+162,Younger than 25,Never married,High School or GED Diploma,Less than 20,private,Transport,Black or African American alone,Male,low
+163,50-59,Separated,High School or GED Diploma,40-49,private,Production/Assembly,White alone,Male,low
+164,30-39,Married,Associate Degree,More than 50,private,Healthcare/Medical Services,White alone,Female,low
+165,30-39,Married,"Started College, No Diploma",40-49,private,Office/Administrative Support,White alone,Female,low
+166,60-69,Married,High School or GED Diploma,More than 50,private,Transport,White alone,Male,low
+167,50-59,Married,Bachelor Degree,40-49,governmental,"Science, Engineering, Technology",White alone,Male,high
+168,40-49,Separated,"Started College, No Diploma",40-49,governmental,Production/Assembly,White alone,Male,low
+169,40-49,Married,Bachelor Degree,40-49,private,Management/Business,White alone,Male,high
+170,40-49,Married,High School or GED Diploma,More than 50,self employed,Management/Business,White alone,Male,high
+171,30-39,Married,Bachelor Degree,More than 50,private,"Science, Engineering, Technology",White alone,Male,high
+172,40-49,Never married,Bachelor Degree,40-49,private,Office/Administrative Support,White alone,Female,high
+173,30-39,Separated,Master or other Degree Beyond Bachelor,40-49,private,Management/Business,White alone,Female,high
+174,Younger than 25,Married,High School or GED Diploma,40-49,private,Sales,White alone,Female,low
+175,30-39,Married,Doctorate Degree,40-49,private,Sales,White alone,Male,high
+176,50-59,Married,"Started College, No Diploma",More than 50,private,Management/Business,White alone,Male,high
+177,30-39,Separated,Doctorate Degree,40-49,governmental,Education,White alone,Female,low
+178,40-49,Married,Bachelor Degree,20-39,private,Healthcare/Medical Services,White alone,Female,low
+179,30-39,Separated,Master or other Degree Beyond Bachelor,20-39,private,Production/Assembly,Black or African American alone,Male,low
+180,40-49,Married,Bachelor Degree,40-49,private,Office/Administrative Support,Black or African American alone,Female,low
+181,Younger than 25,Never married,High School or GED Diploma,Less than 20,private,Sales,White alone,Female,low
+182,25-29,Married,Associate Degree,40-49,private,Healthcare/Medical Services,White alone,Female,low
+183,Younger than 25,Never married,"Started College, No Diploma",20-39,private,Sales,White alone,Female,low
+184,40-49,Married,Bachelor Degree,40-49,private,Production/Assembly,White alone,Male,low
+185,25-29,Never married,"Started College, No Diploma",20-39,private,Transport,White alone,Male,low
+186,25-29,Married,Bachelor Degree,20-39,private,Management/Business,White alone,Female,low
+187,30-39,Never married,High School or GED Diploma,40-49,self employed,Office/Administrative Support,White alone,Female,low
+188,40-49,Married,Bachelor Degree,More than 50,private,Management/Business,White alone,Male,high
+189,50-59,Married,Associate Degree,20-39,private,Healthcare/Medical Services,White alone,Female,high
+190,50-59,Married,Bachelor Degree,20-39,self employed,Finance/Accounting,White alone,Male,low
+191,50-59,Separated,"Started High School, No Diploma",More than 50,private,Management/Business,Black or African American alone,Female,low
+192,30-39,Married,High School or GED Diploma,More than 50,private,Production/Assembly,White alone,Male,high
+193,40-49,Separated,Bachelor Degree,40-49,private,Management/Business,White alone,Female,high
+194,40-49,Married,High School or GED Diploma,40-49,private,Production/Assembly,White alone,Male,high
+195,40-49,Married,Master or other Degree Beyond Bachelor,40-49,governmental,Transport,White alone,Male,high
+196,50-59,Married,"Started College, No Diploma",40-49,private,Production/Assembly,White alone,Male,low
+197,30-39,Married,Bachelor Degree,40-49,private,Healthcare/Medical Services,White alone,Female,high
+198,40-49,Married,High School or GED Diploma,40-49,self employed,Construction/Extraction,White alone,Male,low
+199,60-69,Separated,"Started College, No Diploma",20-39,private,Office/Administrative Support,White alone,Male,low
