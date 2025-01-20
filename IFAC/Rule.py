@@ -72,6 +72,17 @@ def get_instances_covered_by_rule_base(rule_base, data):
         relevant_data = relevant_data[relevant_data[key] == rule_base[key]]
     return relevant_data
 
+
+def get_instances_covered_by_rule(rule, data):
+    relevant_data = data
+    for key in rule.rule_base.keys():
+        relevant_data = relevant_data[relevant_data[key] == rule.rule_base[key]]
+
+    for key in rule.rule_consequence.keys():
+        relevant_data = relevant_data[relevant_data[key] == rule.rule_consequence[key]]
+
+    return relevant_data
+
 def convert_frozenset_rule_format_to_dict_format(frozentset_rule_representation):
     rule_as_dict = {}
     #rule is a frozenset, where each item follows the following format 'key : value'
@@ -184,9 +195,6 @@ def get_number_of_instances_covered_by_ruleBase_and_completeRule_with_neg_part(r
         instances_covered_by_rule_base_with_negation_and_consequence)
 
     return n_instances_covered_by_rule_base_with_negation, n_instances_covered_by_rule_base_with_negation_and_consequence
-
-
-
 
 def calculate_significance_of_slift(number_instances_covered_by_org_rule_base, number_instances_covered_by_ref_rule_base, number_instances_covered_by_complete_org_rule, number_instances_covered_by_complete_ref_rule, total_number_instances):
     confidence_org_rule = number_instances_covered_by_complete_org_rule / number_instances_covered_by_org_rule_base
