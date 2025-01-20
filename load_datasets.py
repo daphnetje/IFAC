@@ -22,16 +22,22 @@ def load_income_data():
 
 #order of features: ['age_num', 'marital status', 'education_num', 'workinghours_num', 'workclass', 'occupation', 'race', 'sex', 'income']]
 def distance_function_income_pred(x1, x2):
-    age_diff = abs(x1[0] - x2[0]) / 6
+    age_dict = {"Younger than 25": 1, "25-29": 2, "30-39": 3, "40-49": 4, "50-59": 5, "60-69": 6, "Older than 70": 7}
+    age_diff = abs(age_dict[x1[0]] - age_dict[x2[0]]) / 6
 
     if x1[1] == x2[1]:
         marital_status_diff = 0
     else:
         marital_status_diff = 0.5
 
-    education_diff = abs(x1[2] - x2[2]) / 9
+    education_dict = {"No Elementary School":1, "Elementary School":2, "Middle School":3,
+                            "Started High School, No Diploma":4, "High School or GED Diploma":5,
+                            "Started College, No Diploma":6, "Associate Degree":7, "Bachelor Degree":8,
+                            "Master or other Degree Beyond Bachelor":9, "Doctorate Degree":10}
+    education_diff = abs(education_dict[x1[2]] - education_dict[x2[2]]) / 9
 
-    workinghours_diff = abs(x1[3] - x2[3])/3
+    workinghours_dict = {"Less than 20": 1, "20-39": 2, "40-49": 3, "More than 50": 4}
+    workinghours_diff = abs(workinghours_dict[x1[3]] - workinghours_dict[x2[3]])/3
 
     if x1[4] == x2[4]:
         workclass_diff = 0
