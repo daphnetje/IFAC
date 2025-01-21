@@ -3,6 +3,7 @@ from .PD_itemset import generate_potentially_discriminated_itemsets
 from .Rule import get_instances_covered_by_rule_base, get_instances_covered_by_rule, remove_rules_that_are_subsets_from_other_rules, convert_to_apriori_format, initialize_rule, calculate_support_conf_slift_and_significance
 from .Rule import Rule
 from .PD_itemset import PD_itemset
+from .Reject import UnfairnessReject, UncertaintyReject
 from .SituationTesting import SituationTesting
 from copy import deepcopy
 from apyori import apriori
@@ -11,7 +12,9 @@ import itertools
 
 class IFAC:
 
-    def __init__(self, sensitive_attributes, reference_group_list, val1_ratio=0.1, val2_ratio=0.1, base_classifier="Random Forest", max_pvalue_slift=0.01, sit_test_k = 5, sit_test_t = 0.3):
+    def __init__(self, coverage, fairness_weight, sensitive_attributes, reference_group_list, val1_ratio=0.1, val2_ratio=0.1, base_classifier="Random Forest", max_pvalue_slift=0.01, sit_test_k = 10, sit_test_t = 0.2):
+        self.coverage = coverage
+        self.fairness_weight = fairness_weight
         self.sensitive_attributes = sensitive_attributes
         self.reference_group_list = reference_group_list
         self.val1_ratio = val1_ratio
@@ -49,6 +52,8 @@ class IFAC:
 
         #Learn uncertainty reject thresholds
         self.unfair_and_certain_limit, self.fair_and_uncertain_limit = self.learn_reject_thresholds(X_val2_dataset)
+        print(self.unfair_and_certain_limit)
+        print(self.fair_and_uncertain_limit)
         return
 
 
@@ -126,42 +131,128 @@ class IFAC:
 
     def learn_reject_thresholds(self, val_set):
         #apply the black box on the validation data, and replace org labels with prediction labels
-        pred_val1 = self.BB.predict(val_set)
+        predictions_val, prediction_probs_val = self.BB.predict_with_proba(val_set)
         val_descriptive = val_set.descriptive_data
 
         val_data_with_preds = deepcopy(val_descriptive)
         val_data_with_preds = val_data_with_preds.drop(columns=[self.decision_attribute])
-        val_data_with_preds[self.decision_attribute] = pred_val1
+        val_data_with_preds[self.decision_attribute] = predictions_val
+        val_data_with_preds['pred. probability'] = prediction_probs_val
         val_data_with_preds.to_csv("val_set2.csv")
 
         self.situationTester.fit(val_data_with_preds)
 
         #first need to understand which instances are covered by reject rules
-        val_data_covered_by_rules = self.extract_data_falling_under_rules(val_data_with_preds)
+        val_data_covered_by_rules, relevant_rules_per_index = self.extract_data_falling_under_rules(val_data_with_preds)
         #afterwards need to run situation testing
-        sit_test_labels_of_val_data_covered_by_rules = self.situationTester.predict(val_data_covered_by_rules)
+        sit_test_labels_of_val_data_covered_by_rules, sit_test_info_of_val_data_covered_by_rules = self.situationTester.predict(val_data_covered_by_rules)
         discriminated_indices = (sit_test_labels_of_val_data_covered_by_rules[sit_test_labels_of_val_data_covered_by_rules == True]).index
 
         unfair_proportion_of_predictions = val_data_with_preds.loc[discriminated_indices]
         fair_proportion_of_predictions = val_data_with_preds[~val_data_with_preds.index.isin(discriminated_indices)]
 
-        return 0, 0
+        n_total_rejections = int((1-self.coverage) * len(val_data_with_preds))
+        n_unfair_rejections = min(int(n_total_rejections * self.fairness_weight), len(unfair_proportion_of_predictions))
+        n_uncertainty_rejections = n_total_rejections - n_unfair_rejections
+
+        t_unfair_data = self.decide_on_probability_threshold_unfair_but_certain(unfair_proportion_of_predictions, n_unfair_rejections)
+        t_uncertain_data = self.decide_on_probability_threshold_fair_but_uncertain(fair_proportion_of_predictions, n_uncertainty_rejections)
+
+        return t_unfair_data, t_uncertain_data
 
 
     def extract_data_falling_under_rules(self, data):
         reject_rules_as_list = list(itertools.chain.from_iterable(self.reject_rules.values()))
 
         data_covered_by_rules = pd.DataFrame([])
+        relevant_rules_per_index = pd.Series([])
+
         relevant_data = deepcopy(data)
 
         for rule in reject_rules_as_list:
             data_covered_by_rule = get_instances_covered_by_rule(rule, relevant_data)
+            indices_covered_by_rule = pd.Series(rule, index=data_covered_by_rule.index)
             data_covered_by_rules = pd.concat([data_covered_by_rules, data_covered_by_rule], axis=0)
+            relevant_rules_per_index = pd.concat([relevant_rules_per_index, indices_covered_by_rule])
             #remove the data that is covered by one rule from rest of relevant data
             relevant_data = relevant_data.drop(data_covered_by_rule.index)
 
-        return data_covered_by_rules
+        return data_covered_by_rules, relevant_rules_per_index
 
+    # Meaning of cut_off_probability: if an instance falls under a discriminatory rule and has a high disc score ->
+    # Reject from making a prediciton if prob is BIGGER than cut_off_value (unfair but certain)
+    # Else (if prob is SMALLER than cut_off_value) than Intervene (unfair and uncertain)
+    def decide_on_probability_threshold_unfair_but_certain(self, relevant_data, n_instances_to_reject):
+        prediction_probs_of_data = relevant_data['pred. probability']
+        ordered_prediction_probs = prediction_probs_of_data.sort_values(ascending=False)
+
+        if (n_instances_to_reject >= len(relevant_data)):
+            cut_off_probability = 0.5
+
+        else:
+            cut_off_probability = ordered_prediction_probs.iloc[n_instances_to_reject]
+
+        return cut_off_probability
+
+    # Meaning of cut_off_probability: if an instance doesn't fall under any of the discrimination rules OR doesn't have a high
+    # disc score, then we are only going to reject that instance if it's prediction_probability is SMALLER than the cut_off_probability
+    def decide_on_probability_threshold_fair_but_uncertain(self, relevant_data, n_instances_to_reject):
+        prediction_probs_of_data = relevant_data['pred. probability']
+        ordered_prediction_probs = prediction_probs_of_data.sort_values(ascending=True)
+
+        if (n_instances_to_reject > len(relevant_data)):
+            cut_off_probability = 0.5
+
+        else:
+            cut_off_probability = ordered_prediction_probs.iloc[n_instances_to_reject]
+
+        return cut_off_probability
+
+    def predict(self, test_dataset):
+        #Step 1: Apply black box classifier, and store predictions
+        predictions, prediction_probabilities = self.BB.predict_with_proba(test_dataset)
+        test_descriptive = test_dataset.descriptive_data
+        test_data_with_preds = deepcopy(test_descriptive)
+        test_data_with_preds = test_data_with_preds.drop(columns=[self.decision_attribute])
+        test_data_with_preds[self.decision_attribute] = predictions
+        test_data_with_preds['pred. probability'] = prediction_probabilities
+
+        #Step 2: Check which instances fall under reject rules
+        test_data_covered_by_rules, relevant_rule_per_index = self.extract_data_falling_under_rules(test_data_with_preds)
+
+        #Step 3: Run situation testing on those instances
+        sit_test_labels, sit_test_info = self.situationTester.predict(test_data_covered_by_rules)
+        discriminated_indices = (sit_test_labels[sit_test_labels == True]).index
+
+        #Step 4: Divide into fair + unfair counterpart
+        unfair_proportion_of_predictions = test_data_with_preds.loc[discriminated_indices]
+        fair_proportion_of_predictions = test_data_with_preds[~test_data_with_preds.index.isin(discriminated_indices)]
+
+        #Step 5: Apply different reject thresholds on both parts
+        to_reject_from_unfair_part = unfair_proportion_of_predictions[unfair_proportion_of_predictions['pred. probability'] >= self.unfair_and_certain_limit]
+        sit_test_info_rejected_instances = sit_test_info.loc[to_reject_from_unfair_part.index]
+        relevant_rules_rejected_instances = relevant_rule_per_index.loc[to_reject_from_unfair_part.index]
+
+        to_reject_from_fair_part = fair_proportion_of_predictions[fair_proportion_of_predictions['pred. probability'] <= self.fair_and_uncertain_limit]
+
+        all_unfairness_based_rejects_df = pd.DataFrame({
+            'prediction_without_reject':  to_reject_from_unfair_part[self.decision_attribute],
+            'prediction probability':  to_reject_from_unfair_part['pred. probability'],
+            'relevant_rule': relevant_rules_rejected_instances,
+            'sit_test_info': sit_test_info_rejected_instances,
+        }, index=unfair_proportion_of_predictions.index)
+        all_unfairness_based_rejects_series = all_unfairness_based_rejects_df.apply(self.create_unfairness_based_reject, axis=1)
+
+        all_uncertainty_based_rejects_df = pd.DataFrame({
+            'prediction_without_reject': to_reject_from_fair_part[self.decision_attribute],
+            'prediction probability': to_reject_from_fair_part['pred. probability'],
+        }, index=to_reject_from_fair_part.index)
+        all_uncertainty_based_rejects_series = all_uncertainty_based_rejects_df.apply(self.create_uncertainty_based_reject, axis=1)
+
+        predictions.update(all_unfairness_based_rejects_series)
+        predictions.update(all_uncertainty_based_rejects_series)
+        print(predictions)
+        return predictions
 
     def give_quick_sets_of_rules_for_income_testing_purposes(self):
         disc_class_rules_connected_to_pd_itemsets = dict()
@@ -195,4 +286,18 @@ class IFAC:
 
         return disc_class_rules_connected_to_pd_itemsets
 
+
+    def create_unfairness_based_reject(self, row):
+        return UnfairnessReject(
+            prediction_without_reject = row['prediction_without_reject'],
+            prediction_probability = row['prediction probability'],
+            rule_reject_is_based_upon = row['relevant_rule'],
+            sit_test_summary = row['sit_test_info']
+        )
+
+    def create_uncertainty_based_reject(self, row):
+        return UncertaintyReject(
+            prediction_without_reject=row['prediction_without_reject'],
+            prediction_probability=row['prediction probability'],
+        )
 

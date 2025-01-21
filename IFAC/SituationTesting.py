@@ -65,4 +65,37 @@ class SituationTesting:
 
         disc_scores = pos_ratio_reference_neighbours - pos_ratio_non_reference_neighbours
         disc_labels = disc_scores>self.t
-        return disc_labels
+
+        combined_situation_test_info_df = pd.DataFrame({
+            'disc_score': disc_scores,
+            'disc_label': disc_labels,
+            'closest_non_reference': nearest_non_reference_neighbors_df.values.tolist(),
+            'closest_reference': nearest_reference_neighbors_df.values.tolist()
+        }, index=data.index)
+
+        sit_test_info = combined_situation_test_info_df.apply(create_sit_test_info, axis=1)
+
+        return disc_labels, sit_test_info
+
+
+
+class SituationTestingInfo:
+
+    def __init__(self, disc_score, discriminated_label, closest_non_reference, closest_reference):
+        self.disc_score = disc_score
+        self.discriminated_label = discriminated_label
+        self.closest_non_reference = closest_non_reference
+        self.closest_reference = closest_reference
+
+    def __str__(self):
+        str_repr = f"Disc Score: {self.disc_score:.2f}"
+        return str_repr
+
+
+def create_sit_test_info(row):
+    return SituationTestingInfo(
+        disc_score=row['disc_score'],
+        discriminated_label=row['disc_label'],
+        closest_non_reference=row['closest_non_reference'],
+        closest_reference=row['closest_reference']
+    )

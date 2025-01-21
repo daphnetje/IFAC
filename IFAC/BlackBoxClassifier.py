@@ -2,6 +2,8 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
+import numpy as np
+import pandas as pd
 
 class BlackBoxClassifier:
 
@@ -35,4 +37,19 @@ class BlackBoxClassifier:
         print(accuracy_score(y_test, predictions))
 
         return predictions
+
+
+    def predict_with_proba(self, X_dataset):
+        X = X_dataset.one_hot_encoded_data.loc[:,
+                 X_dataset.one_hot_encoded_data.columns != X_dataset.decision_attribute]
+        predicted_labels = pd.Series(self.classifier.predict(X))
+
+        # Predict the probabilities for each class
+        predicted_probabilities = self.classifier.predict_proba(X)
+
+        # Get the probability corresponding to the predicted label for each instance
+        probabilities_for_labels = predicted_probabilities.max(axis=1)
+
+        return predicted_labels, probabilities_for_labels
+
 
