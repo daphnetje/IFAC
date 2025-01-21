@@ -5,9 +5,9 @@ from copy import deepcopy
 random.seed(4)
 
 class Dataset:
-    def __init__(self, descriptive_data, numerical_data, decision_attribute, undesirable_label, desirable_label, categorical_features, distance_function, one_hot_encoded_data = None):
+    def __init__(self, descriptive_data, ordinal_to_numeric_dicts, decision_attribute, undesirable_label, desirable_label, categorical_features, distance_function, one_hot_encoded_data = None):
         self.descriptive_data = descriptive_data
-        self.numerical_data = numerical_data
+        self.ordinal_to_numeric_dicts = ordinal_to_numeric_dicts
         self.decision_attribute = decision_attribute
         self.undesirable_label = undesirable_label
         self.desirable_label = desirable_label
@@ -51,7 +51,11 @@ class Dataset:
         return pd.Series(binary_decision_labels)
 
     def one_hot_encode_data(self):
-        df_encoded = pd.get_dummies(self.numerical_data, columns=self.categorical_features)
+        numerical_data = deepcopy(self.descriptive_data)
+        for column, conversion_dict in self.ordinal_to_numeric_dicts.items():
+            numerical_data[column] = numerical_data[column].replace(conversion_dict)
+
+        df_encoded = pd.get_dummies(numerical_data, columns=self.categorical_features)
         return df_encoded
 
 
@@ -59,27 +63,24 @@ class Dataset:
         list_of_test_sets = []
         size_of_each_set = len(self.descriptive_data) // number_of_test_sets
         remaining_des_data = deepcopy(self.descriptive_data)
-        remaining_num_data = deepcopy(self.numerical_data)
         remaining_one_hot_data = deepcopy(self.one_hot_encoded_data)
         for i in range(number_of_test_sets-1):
-            remaining_des_data, desc_data_test, remaining_num_data, num_data_test, remaining_one_hot_data, one_hot_data_test = train_test_split(
-                remaining_des_data, remaining_num_data, remaining_one_hot_data, test_size=size_of_each_set,
+            remaining_des_data, desc_data_test, remaining_one_hot_data, one_hot_data_test = train_test_split(
+                remaining_des_data, remaining_one_hot_data, test_size=size_of_each_set,
                 random_state=4)
 
             desc_data_test = desc_data_test.reset_index(drop=True)
-            num_data_test = num_data_test.reset_index(drop=True)
             one_hot_data_test = one_hot_data_test.reset_index(drop=True)
 
-            dataset_test = Dataset(desc_data_test, num_data_test, self.decision_attribute, self.undesirable_label,
+            dataset_test = Dataset(desc_data_test, self.ordinal_to_numeric_dicts, self.decision_attribute, self.undesirable_label,
                                    self.desirable_label, self.categorical_features, self.distance_function,
                                    one_hot_encoded_data=one_hot_data_test)
             list_of_test_sets.append(dataset_test)
 
         remaining_des_data = remaining_des_data.reset_index(drop=True)
-        remaining_num_data = remaining_num_data.reset_index(drop=True)
         remaining_one_hot_data = remaining_one_hot_data.reset_index(drop=True)
 
-        final_dataset = Dataset(remaining_des_data, remaining_num_data, self.decision_attribute, self.undesirable_label,
+        final_dataset = Dataset(remaining_des_data, self.ordinal_to_numeric_dicts, self.decision_attribute, self.undesirable_label,
                                 self.desirable_label, self.categorical_features, self.distance_function,
                                 one_hot_encoded_data=remaining_one_hot_data)
         list_of_test_sets.append(final_dataset)
@@ -88,18 +89,16 @@ class Dataset:
 
 
     def split_into_train_test(self, test_fraction):
-        desc_data_train, desc_data_test, num_data_train, num_data_test, one_hot_data_train, one_hot_data_test = train_test_split(self.descriptive_data, self.numerical_data, self.one_hot_encoded_data, test_size=test_fraction, random_state=4)
+        desc_data_train, desc_data_test, one_hot_data_train, one_hot_data_test = train_test_split(self.descriptive_data, self.one_hot_encoded_data, test_size=test_fraction, random_state=4)
         desc_data_train = desc_data_train.reset_index(drop=True)
         desc_data_test = desc_data_test.reset_index(drop=True)
-        num_data_train = num_data_train.reset_index(drop=True)
-        num_data_test = num_data_test.reset_index(drop=True)
         one_hot_data_train = one_hot_data_train.reset_index(drop=True)
         one_hot_data_test = one_hot_data_test.reset_index(drop=True)
 
-        dataset_train = Dataset(desc_data_train, num_data_train, self.decision_attribute, self.undesirable_label,
+        dataset_train = Dataset(desc_data_train, self.ordinal_to_numeric_dicts, self.decision_attribute, self.undesirable_label,
                                 self.desirable_label, self.categorical_features, self.distance_function,
                                 one_hot_encoded_data=one_hot_data_train)
-        dataset_test = Dataset(desc_data_test, num_data_test, self.decision_attribute, self.undesirable_label,
+        dataset_test = Dataset(desc_data_test, self.ordinal_to_numeric_dicts, self.decision_attribute, self.undesirable_label,
                                self.desirable_label, self.categorical_features, self.distance_function,
                                one_hot_encoded_data=one_hot_data_test)
 
@@ -156,19 +155,16 @@ def split_into_one_hot_encoded_X_and_y(data):
 
 def stack_folds_onto_each_other(list_of_datasets):
     final_descriptive_data = pd.DataFrame([])
-    final_numeric_data = pd.DataFrame([])
     final_one_hot_encoded_data = pd.DataFrame([])
 
     for dataset in list_of_datasets:
         descriptive_data_of_fold = dataset.descriptive_data
-        numeric_data_of_fold = dataset.numerical_data
         one_hot_encoded_data_of_fold = dataset.one_hot_encoded_data
 
         final_descriptive_data = pd.concat([final_descriptive_data, descriptive_data_of_fold], ignore_index=True)
-        final_numeric_data = pd.concat([final_numeric_data, numeric_data_of_fold], ignore_index=True)
         final_one_hot_encoded_data = pd.concat([final_one_hot_encoded_data, one_hot_encoded_data_of_fold], ignore_index=True)
 
-    final_dataset = Dataset(final_descriptive_data, final_numeric_data, dataset.decision_attribute, dataset.undesirable_label,
+    final_dataset = Dataset(final_descriptive_data, dataset.ordinal_to_numeric_dicts, dataset.decision_attribute, dataset.undesirable_label,
                             dataset.desirable_label, dataset.categorical_features, dataset.distance_function, final_one_hot_encoded_data)
 
     return final_dataset
