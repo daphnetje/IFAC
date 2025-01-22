@@ -38,3 +38,17 @@ class UncertaintyReject(Reject):
         str_pres = Reject.__str__(self)
         str_pres += "\nDecision will be deferred to human"
         return str_pres
+
+def create_unfairness_based_reject(row):
+    return UnfairnessReject(
+        prediction_without_reject = row['prediction_without_reject'],
+        prediction_probability = row['prediction probability'],
+        rule_reject_is_based_upon = row['relevant_rule'],
+        sit_test_summary = row['sit_test_info']
+    )
+
+def create_uncertainty_based_reject(row):
+    return UncertaintyReject(
+        prediction_without_reject=row['prediction_without_reject'],
+        prediction_probability=row['prediction probability'],
+    )

@@ -48,7 +48,7 @@ class BlackBoxClassifier:
         predicted_probabilities = self.classifier.predict_proba(X)
 
         # Get the probability corresponding to the predicted label for each instance
-        probabilities_for_labels = predicted_probabilities.max(axis=1)
+        probabilities_for_labels = pd.Series(predicted_probabilities.max(axis=1))
 
         return predicted_labels, probabilities_for_labels
 

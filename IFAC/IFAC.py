@@ -3,7 +3,7 @@ from .PD_itemset import generate_potentially_discriminated_itemsets
 from .Rule import get_instances_covered_by_rule_base, get_instances_covered_by_rule, remove_rules_that_are_subsets_from_other_rules, convert_to_apriori_format, initialize_rule, calculate_support_conf_slift_and_significance
 from .Rule import Rule
 from .PD_itemset import PD_itemset
-from .Reject import UnfairnessReject, UncertaintyReject
+from .Reject import create_uncertainty_based_reject, create_unfairness_based_reject
 from .SituationTesting import SituationTesting
 from copy import deepcopy
 from apyori import apriori
@@ -25,10 +25,12 @@ class IFAC:
         self.sit_test_t = sit_test_t
 
     def fit(self, X):
+        print("Setting up IFAC")
         # Generate potentially discriminated itemsets
         self.pd_itemsets = generate_potentially_discriminated_itemsets(X, self.sensitive_attributes)
         self.decision_attribute = X.decision_attribute
         self.positive_label = X.desirable_label
+        self.negative_label = X.undesirable_label
         self.class_items = frozenset([X.decision_attribute + " : " + X.undesirable_label, X.decision_attribute + " : " + X.desirable_label])
 
         #Step 0: Split into train and two validation sets
@@ -37,14 +39,14 @@ class IFAC:
         X_train_dataset, X_val1_dataset = X.split_into_train_test(val1_n)
         X_train_dataset, X_val2_dataset = X_train_dataset.split_into_train_test(val2_n)
 
-        #Step 1: Train Black-Box Model    #TODO: consider if I want to use X_train_dataset (in Dataset format) or already extract one hot encoded
+        #Step 1: Train Black-Box Model
         self.BB = BlackBoxClassifier(self.base_classifier)
         self.BB.fit(X_train_dataset)
 
         #Step 2: Extract at-risk subgroups dict, each key is a potentially_discriminated itemset (can be intersectional!) and each value
         #is a list of rules that are problematic
-        self.reject_rules = self.give_quick_sets_of_rules_for_income_testing_purposes()
-        #self.reject_rules = self.learn_reject_rules(X_val1_dataset)
+        #self.reject_rules = self.give_quick_sets_of_rules_for_income_testing_purposes()
+        self.reject_rules = self.learn_reject_rules(X_val1_dataset)
         self.print_all_reject_rules()
 
         #Step 3: Prepare situation testing
@@ -68,6 +70,7 @@ class IFAC:
 
         disc_rules_per_prot_itemset = {}
         for prot_itemset in self.pd_itemsets:
+            print("Learning rules for: " + str(prot_itemset))
             disc_rules_for_prot_itemset = self.extract_disc_rules_for_one_prot_itemset(prot_itemset, val_data_with_preds)
             disc_rules_per_prot_itemset[prot_itemset] = disc_rules_for_prot_itemset
 
@@ -230,8 +233,12 @@ class IFAC:
 
         #Step 5: Apply different reject thresholds on both parts
         to_reject_from_unfair_part = unfair_proportion_of_predictions[unfair_proportion_of_predictions['pred. probability'] >= self.unfair_and_certain_limit]
+        to_flip_from_unfair_part = unfair_proportion_of_predictions[unfair_proportion_of_predictions['pred. probability'] < self.unfair_and_certain_limit]
+
         sit_test_info_rejected_instances = sit_test_info.loc[to_reject_from_unfair_part.index]
         relevant_rules_rejected_instances = relevant_rule_per_index.loc[to_reject_from_unfair_part.index]
+        sit_test_info_flipped_instances = sit_test_info.loc[to_flip_from_unfair_part.index]
+        relevant_rules_flipped_instances = relevant_rule_per_index.loc[to_flip_from_unfair_part.index]
 
         to_reject_from_fair_part = fair_proportion_of_predictions[fair_proportion_of_predictions['pred. probability'] <= self.fair_and_uncertain_limit]
 
@@ -241,18 +248,28 @@ class IFAC:
             'relevant_rule': relevant_rules_rejected_instances,
             'sit_test_info': sit_test_info_rejected_instances,
         }, index=unfair_proportion_of_predictions.index)
-        all_unfairness_based_rejects_series = all_unfairness_based_rejects_df.apply(self.create_unfairness_based_reject, axis=1)
+        all_unfairness_based_rejects_series = all_unfairness_based_rejects_df.apply(create_unfairness_based_reject, axis=1)
+
+        all_unfairness_based_flips_df = pd.DataFrame({
+            'prediction_without_reject': to_flip_from_unfair_part[self.decision_attribute],
+            'prediction probability': to_flip_from_unfair_part['pred. probability'],
+            'relevant_rule': relevant_rules_flipped_instances,
+            'sit_test_info': sit_test_info_flipped_instances,
+        })
+        all_unfairness_based_flips_series = all_unfairness_based_flips_df.apply(create_unfairness_based_reject, axis=1)
+        org_predictions_to_be_flipped = to_flip_from_unfair_part[self.decision_attribute]
+        flipped_predictions = org_predictions_to_be_flipped.replace({self.negative_label: self.positive_label, self.positive_label: self.negative_label})
 
         all_uncertainty_based_rejects_df = pd.DataFrame({
             'prediction_without_reject': to_reject_from_fair_part[self.decision_attribute],
             'prediction probability': to_reject_from_fair_part['pred. probability'],
         }, index=to_reject_from_fair_part.index)
-        all_uncertainty_based_rejects_series = all_uncertainty_based_rejects_df.apply(self.create_uncertainty_based_reject, axis=1)
+        all_uncertainty_based_rejects_series = all_uncertainty_based_rejects_df.apply(create_uncertainty_based_reject, axis=1)
 
         predictions.update(all_unfairness_based_rejects_series)
         predictions.update(all_uncertainty_based_rejects_series)
-        print(predictions)
-        return predictions
+        predictions.update(flipped_predictions)
+        return predictions, all_unfairness_based_flips_series
 
     def give_quick_sets_of_rules_for_income_testing_purposes(self):
         disc_class_rules_connected_to_pd_itemsets = dict()
@@ -287,17 +304,4 @@ class IFAC:
         return disc_class_rules_connected_to_pd_itemsets
 
 
-    def create_unfairness_based_reject(self, row):
-        return UnfairnessReject(
-            prediction_without_reject = row['prediction_without_reject'],
-            prediction_probability = row['prediction probability'],
-            rule_reject_is_based_upon = row['relevant_rule'],
-            sit_test_summary = row['sit_test_info']
-        )
-
-    def create_uncertainty_based_reject(self, row):
-        return UncertaintyReject(
-            prediction_without_reject=row['prediction_without_reject'],
-            prediction_probability=row['prediction probability'],
-        )
 
