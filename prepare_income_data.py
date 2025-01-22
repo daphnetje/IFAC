@@ -197,7 +197,7 @@ def bin_occupation(row):
     return "Unemployed"
 
 
-def prepare_income_prediction_data(sample_size = 7000):
+def prepare_income_prediction_data(sample_size = 20000):
     #'AGEP','COW', 'SCHL', 'MAR','OCCP','POBP','RELP','WKHP','SEX','RAC1P',
     feature_names = ['AGEP','COW', 'SCHL', 'MAR','OCCP','WKHP','SEX','RAC1P', 'ENG', 'FER']
     renamed_features_dict = {'AGEP': 'age', 'COW': 'workclass', 'SCHL': 'education',

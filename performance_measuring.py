@@ -32,7 +32,6 @@ def extract_performance_df_over_non_rejected_instances(classification_method, da
         performance_entry["Number of instances"] = calculate_number_of_instances_based_on_conf_matrix(conf_matrix)
 
         performance_df = performance_df.append(performance_entry, ignore_index=True)
-    print(performance_df)
     return performance_df
 
 
