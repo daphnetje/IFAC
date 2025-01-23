@@ -26,24 +26,23 @@ class SituationTesting:
 
 
     def compute_k_nearest_neighbours_of_reference_and_non_reference(self, dataset):
-        overlapping_indices_non_reference_group = dataset.index.intersection(self.non_reference_group_data.index)
         distance_matrix_to_non_reference = cdist(dataset, self.non_reference_group_data, metric=distance_function_income_pred)
         distance_df_to_non_reference = pd.DataFrame(distance_matrix_to_non_reference, index=dataset.index, columns=self.non_reference_group_data.index)
 
         # Find the k nearest neighbors of the non_reference_group for each index in the dataset
-        nearest_non_reference_neighbors = distance_df_to_non_reference.apply(lambda row: row[~row.index.isin(overlapping_indices_non_reference_group)].nsmallest(self.k).index.tolist(), axis=1)
+        nearest_non_reference_neighbors = distance_df_to_non_reference.apply(lambda row: row.nsmallest(self.k).index.tolist(), axis=1)
+
         nearest_non_reference_neighbors_df = pd.DataFrame(nearest_non_reference_neighbors.tolist(), index=dataset.index,
                                             columns=[f'Neighbor_{i + 1}' for i in range(self.k)])
 
 
-        overlapping_indices_reference_group = dataset.index.intersection(self.all_reference_group_data.index)
         distance_matrix_to_reference = cdist(dataset, self.all_reference_group_data,
                                                  metric=distance_function_income_pred)
         distance_df_to_reference = pd.DataFrame(distance_matrix_to_reference, index=dataset.index,
                                                     columns=self.all_reference_group_data.index)
 
         # Find the k nearest neighbors of the reference group for each index in the dataset
-        nearest_reference_neighbors = distance_df_to_reference.apply(lambda row: row[~row.index.isin(overlapping_indices_reference_group)].nsmallest(self.k).index.tolist(), axis=1)
+        nearest_reference_neighbors = distance_df_to_reference.apply(lambda row: row.nsmallest(self.k).index.tolist(), axis=1)
         nearest_reference_neighbors_df = pd.DataFrame(nearest_reference_neighbors.tolist(), index=dataset.index,
                                                           columns=[f'Neighbor_{i + 1}' for i in range(self.k)])
 
